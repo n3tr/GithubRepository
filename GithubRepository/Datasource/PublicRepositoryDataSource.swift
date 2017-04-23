@@ -10,12 +10,19 @@ import UIKit
 
 public final class PublicRepositoryDataSource: NSObject, UITableViewDataSource {
     
+    var repositories: [Repository] = []
+    
+    public func load(repositories: [Repository]) {
+        self.repositories = repositories
+    }
+    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "RepoCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "RepoCell", for: indexPath) as! RepoCell
+        cell.configureWith(value: self.repositories[indexPath.row])
         return cell
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return repositories.count
     }
 }

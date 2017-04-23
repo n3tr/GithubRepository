@@ -7,9 +7,10 @@
 //
 
 import UIKit
-
+import RxSwift
 public class PublicRepositoryTableViewController: UITableViewController {
     
+    let disposeBag = DisposeBag()
     let datasource = PublicRepositoryDataSource()
     
     
@@ -24,6 +25,15 @@ public class PublicRepositoryTableViewController: UITableViewController {
         self.tableView.dataSource = datasource
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 57
+        
+        
+        
+        sharedService.request(.publicRepo).mapArray(Repository.self).subscribe(onNext: { (repositories) in
+            self.datasource.load(repositories: repositories)
+            self.tableView.reloadData()
+        }, onError: { (error) in
+            fatalError()
+        }).disposed(by: disposeBag)
     }
 }
 
